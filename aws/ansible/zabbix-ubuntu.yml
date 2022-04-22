@@ -1,0 +1,19 @@
+---
+- name: Install Zabbix in Ubuntu
+  hosts: zabbix-server
+  gather_facts: 'no'
+
+  become: 'yes'
+  tasks:
+    - name: Download Zabbix packages
+      command: wget https://repo.zabbix.com/zabbix/6.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_6.0-1+ubuntu20.04_all.deb
+
+    - name: Configure Zabbix packages
+      command: dpkg -i zabbix-release_6.0-1+ubuntu20.04_all.deb
+      
+    - name: Updates packages
+      command: apt update
+      
+    - name: Install Zabbix packages (Server+Frontend+Agent)
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: ['zabbix-server-mysql', 'zabbix-frontend-php', 'zabbix-apache-conf', 'zabbix-agent']
