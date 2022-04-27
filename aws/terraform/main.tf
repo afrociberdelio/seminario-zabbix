@@ -43,7 +43,6 @@ resource "aws_instance" "laboratorio" {
   
   ebs_block_device {
     device_name = "/dev/sda1"
-#    snapshot_id = "snap-0f7a6eae6d90437c4"
     snapshot_id = null
     volume_type = "standard"
     delete_on_termination = true
@@ -69,7 +68,7 @@ variable "lab_subnet_public_id" {
 
 resource "aws_security_group" "permitir_ssh_http_service" {
   name        = "permitir_ssh"
-  description = "Permite SSH HTTP HTTPS e Nodes Ports Rancher na instancia EC2"
+  description = "Permite SSH HTTP HTTPS e Ports Zabbix nas instancias EC2"
   vpc_id      = var.lab_vpc_id
 
   ingress {
@@ -122,4 +121,10 @@ resource "aws_security_group" "permitir_ssh_http_service" {
   tags = {
     Name = "Liberar_Portas_Laboratio"
   }
+  
+  output "instance_ip_addr" {
+  value       = aws_instance.laboratorio.public_ip
+  description = "The private IP address of the main server instance."
+  }
+  
 }
